@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myWebpush</title>
+</head>
+<body>
+    <div>
+        <div style="display: flex;">
+            <div style="display: flex;flex-direction: column;">
+                <h5>公開鍵＆秘密鍵<sub>サーバー生成</sub></h5>
+                <p id="pubkey">公開鍵</p>
+                <input type="text">
+                <p>秘密鍵</p>
+                <input type="text">
+                <input type="button" value="変換" onclick="changeVAPID()">
+            </div>
+            <div style="display: flex;flex-direction: column;">
+                <h5>VAPID</h5>
+                <p>VAPID</p>
+                <input type="text" readonly id="vapid">
+                <input type="button" value="サービスワーカーへ登録">
+            </div>
+            <div style="display: flex;flex-direction: column;">
+                <h5>サービスワーカー</h5>
+                <p>サービスワーカーのPush</p>
+                <span>エンドポイント</span>
+                <input type="text" readonly id="endpoint">
+                <span>公開鍵<sub>クライアント生成</sub></span>
+                <input type="text" readonly id="p256dh">
+                <span>セキュリティ強化用</span>
+                <input type="text" readonly id="auth">
+            </div>
+        </div>
+        <div style="position: relative;">
+            <h5>サービスワーカー</h5>
+
+
+        </div>
+    </div>
+</body>
+<script>
+    function changeVAPID(){
+        const target = document.querySelector("#pubkey")
+        if(!target.value) return alert("公開鍵が入力されていません。")
+        document.querySelector("#vapid").value = urlB64ToUint8Array(target)
+    }
+</script>
+<script>
+    /** https://tech.excite.co.jp/entry/2021/06/30/104213より
+     * トークンを変換するときに使うロジック
+     * @param {*} base64String 
+     */
+    function urlB64ToUint8Array (base64String) {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding)
+            .replace(/\-/g, '+')
+            .replace(/_/g, '/');
+
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+</script>
+</html>
