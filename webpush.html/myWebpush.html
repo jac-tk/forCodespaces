@@ -35,9 +35,34 @@
         </div>
         <div style="position: relative;">
             <h5>サービスワーカー</h5>
-
-
+            <div id="SW_f">
+                <p>登録</p>
+                <span>サービスワーカーがまだ登録されていません。</span><br>
+                <input type="button" value="ブラウザに登録">
+            </div>
+            <div id="SW_t">
+                <p>OK</p>
+                <span>サービスワーカーは登録済みです。</span><br>
+                <input type="button" value="再登録">
+                <input type="button" value="登録解除">
+            </div>
         </div>
+        <script>
+            function checkSW(){
+                document.querySelectorAll("[id^=SW_]").forEach(el=>el.style.display="none")
+
+                if (!'serviceWorker' in navigator) {
+                    alert("お使いのブラウザはサービスワーカーに対応していません。")
+                    return 0
+                }
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {        
+                    document.querySelector("#SW_t").style.display="unset"
+                }).catch( e =>{
+                    document.querySelector("#SW_f").style.display="unset"
+                });
+            }
+            checkSW();//即実行
+        </script>
     </div>
 </body>
 <script>
